@@ -1,29 +1,14 @@
-#include <cnn/tensor.h>
+#include "cnn/conv2d.h"
+
 #include <assert.h>
-#include <stddef.h>
-#include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
 
-
-typedef struct{
-     
-    size_t input_channels;
-    size_t output_channels;
-    size_t kernel_height;
-    size_t kernel_width;
-    float *weights;
-    size_t weight_count;
-    float *biases;
-    size_t stride;
-    size_t padding;
-} Conv2DLayer;
-
-
-
-size_t conv2d_weight_index(const Conv2DLayer *layer, size_t output_channel,
-                           size_t input_channel, size_t kernel_row,
-                           size_t kernel_col){
+static size_t conv2d_weight_index(const Conv2DLayer *layer,
+                                  size_t output_channel,
+                                  size_t input_channel,
+                                  size_t kernel_row,
+                                  size_t kernel_col){
     assert(layer != NULL);
     assert(output_channel < layer->output_channels);
     assert(input_channel < layer->input_channels);
@@ -163,9 +148,11 @@ float conv2d_get_bias(const Conv2DLayer *layer, size_t output_channel){
 }
 
 bool conv2d_output_shape(const Conv2DLayer *layer, const Tensor3D *input,
-                         size_t *output_height, size_t *output_width){
+                         size_t *output_channels, size_t *output_height,
+                         size_t *output_width){
     if (layer == NULL || input == NULL ||
-        output_height == NULL || output_width == NULL) {
+        output_channels == NULL || output_height == NULL ||
+        output_width == NULL) {
         return false;
     }
 
@@ -194,7 +181,95 @@ bool conv2d_output_shape(const Conv2DLayer *layer, const Tensor3D *input,
     size_t calculated_width =
         ((padded_width - layer->kernel_width) / layer->stride) + 1;
 
+    *output_channels = layer->output_channels;
     *output_height = calculated_height;
     *output_width = calculated_width;
+    return true;
+}
+
+bool conv2d_forward(const Conv2DLayer *layer, const Tensor3D *input,
+                    Tensor3D *output){
+    if (layer == NULL || input == NULL || output == NULL ||
+        output == input || layer->weights == NULL ||
+        layer->biases == NULL || input->data == NULL) {
+        return false;
+    }
+
+    size_t output_channels;
+    size_t output_height;
+    size_t output_width;
+
+    if (!conv2d_output_shape(layer, input, &output_channels, &output_height,
+                             &output_width)) {
+        return false;
+    }
+
+    if (!tensor3d_init(output, output_channels, output_height, output_width)) {
+        return false;
+    }
+
+    for (size_t output_channel = 0;
+         output_channel < output->channels;
+         ++output_channel) {
+        for (size_t output_row = 0;
+             output_row < output->height;
+             ++output_row) {
+            for (size_t output_col = 0;
+                 output_col < output->width;
+                 ++output_col) {
+                float sum = conv2d_get_bias(layer, output_channel);
+
+                for (size_t input_channel = 0;
+                     input_channel < input->channels;
+                     ++input_channel) {
+                    for (size_t kernel_row = 0;
+                         kernel_row < layer->kernel_height;
+                         ++kernel_row) {
+                        size_t padded_row =
+                            output_row * layer->stride + kernel_row;
+
+                        if (padded_row < layer->padding) {
+                            continue;
+                        }
+
+                        size_t input_row = padded_row - layer->padding;
+
+                        if (input_row >= input->height) {
+                            continue;
+                        }
+
+                        for (size_t kernel_col = 0;
+                             kernel_col < layer->kernel_width;
+                             ++kernel_col) {
+                            size_t padded_col =
+                                output_col * layer->stride + kernel_col;
+
+                            if (padded_col < layer->padding) {
+                                continue;
+                            }
+
+                            size_t input_col = padded_col - layer->padding;
+
+                            if (input_col >= input->width) {
+                                continue;
+                            }
+
+                            float input_value = tensor3d_get(
+                                input, input_channel, input_row, input_col);
+                            float weight_value = conv2d_get_weight(
+                                layer, output_channel, input_channel,
+                                kernel_row, kernel_col);
+
+                            sum += input_value * weight_value;
+                        }
+                    }
+                }
+
+                tensor3d_set(output, output_channel, output_row, output_col,
+                             sum);
+            }
+        }
+    }
+
     return true;
 }
