@@ -1,4 +1,4 @@
-#include "cnn/relu.h"
+#include "relu.h"
 #include "stdlib.h"
 #include "stdio.h"
 #include "stdbool.h"

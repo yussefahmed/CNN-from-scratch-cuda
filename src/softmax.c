@@ -1,4 +1,4 @@
-#include "cnn/softmax.h"
+#include "softmax.h"
 
 #include <math.h>
 #include <stddef.h>

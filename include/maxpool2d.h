@@ -1,7 +1,7 @@
 #ifndef CNN_MAXPOOL2D_H
 #define CNN_MAXPOOL2D_H
 
-#include "cnn/tensor.h"
+#include "tensor.h"
 
 #include <stdbool.h>
 #include <stddef.h>

@@ -1,4 +1,4 @@
-#include "cnn/dense.h"
+#include "dense.h"
 
 #include <assert.h>
 #include <stdint.h>

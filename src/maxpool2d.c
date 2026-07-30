@@ -1,4 +1,4 @@
-#include "cnn/maxpool2d.h"
+#include "maxpool2d.h"
 
 bool maxpool2d_init(MaxPool2DLayer *layer, size_t kernel_height,
                     size_t kernel_width, size_t stride){

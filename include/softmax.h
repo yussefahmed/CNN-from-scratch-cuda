@@ -1,7 +1,7 @@
 #ifndef CNN_SOFTMAX_H
 #define CNN_SOFTMAX_H
 
-#include "cnn/tensor.h"
+#include "tensor.h"
 
 #include <stdbool.h>
 

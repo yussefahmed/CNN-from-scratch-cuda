@@ -1,4 +1,4 @@
-#include "cnn/conv2d.h"
+#include "conv2d.h"
 
 #include <assert.h>
 #include <stdint.h>

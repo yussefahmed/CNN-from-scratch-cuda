@@ -1,7 +1,7 @@
 #ifndef CNN_CONV2D_H
 #define CNN_CONV2D_H
 
-#include "cnn/tensor.h"
+#include "tensor.h"
 
 #include <stdbool.h>
 #include <stddef.h>

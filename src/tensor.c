@@ -1,4 +1,4 @@
-#include "cnn/tensor.h"
+#include "tensor.h"
 
 #include <assert.h>
 #include <stdint.h>

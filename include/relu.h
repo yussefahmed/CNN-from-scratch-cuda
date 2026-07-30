@@ -1,7 +1,7 @@
 #ifndef CNN_RELU_H
 #define CNN_RELU_H
 
-#include "cnn/tensor.h"
+#include "tensor.h"
 
 #include <stdbool.h>
 

@@ -1,7 +1,7 @@
 #ifndef CNN_DENSE_H
 #define CNN_DENSE_H
 
-#include "cnn/tensor.h"
+#include "tensor.h"
 
 #include <stdbool.h>
 #include <stddef.h>
