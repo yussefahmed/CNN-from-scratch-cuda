@@ -17,7 +17,7 @@ bool softmax_forward(Tensor3D *tensor){
 
 
     }
-    float sum = expf(0);
+    float sum = 0.0f;
     for (size_t tensor_idx = 0; tensor_idx < tensor->count ; ++tensor_idx){
 
         float exponential = expf(tensor->data[tensor_idx] - largest_value);
