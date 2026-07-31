@@ -1,0 +1,19 @@
+\documentclass[11pt]{article}
+
+\title{CNN from Scratch: Design and Implementation Notes}
+\author{Yussef Ahmed}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Outline of Optimizations for \texttt{tensor.c}}
+
+\begin{itemize}
+    \item Use NHWC so the channels of each pixel are contiguous in memory.
+    \item This layout supports efficient channel access, vectorized loads, and future Tensor Core convolution without an NCHW transpose.
+    \item NHWC is not always faster; confirm its benefit after implementing and profiling the CUDA kernels.
+\end{itemize}
+
+\end{document}
