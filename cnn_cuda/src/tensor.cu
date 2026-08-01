@@ -1,19 +1,6 @@
-#include <stddef.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdint.h> 
-#include <cuda_runtime.h>
-#include <cuda_fp16.h>
+#include "tensor.cuh"
 
-// save it as NHWC instead of NCHW because the first makes channels contigious 
-typedef struct {
-    size_t batch_size;
-    size_t height;
-    size_t width;
-    size_t channels;
-    size_t count; 
-    __half *device_pointer; // gpu data pointer  (we store fp16 so we can use tensor core and acc at fp32)
-} CudaTensor;
+#include <stdint.h>
 
 __host__ bool cuda_tensor_init(CudaTensor *tensor, size_t batch_size , size_t height , size_t width , size_t channels ){
 
@@ -131,6 +118,5 @@ __host__ bool cuda_tensor_copy_to_host(const CudaTensor *tensor , __half *host_d
     
 
    
-
 
 
