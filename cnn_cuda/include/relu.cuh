@@ -4,7 +4,7 @@
 #include "tensor.cuh"
 
 /**
- * Applies ReLU in place to every element of an FP16 CUDA tensor.
+ * Applies ReLU in place to every element of an FP32 CUDA tensor.
  *
  * @param tensor Initialized tensor backed by device memory.
  *

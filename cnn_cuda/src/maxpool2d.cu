@@ -83,7 +83,7 @@ __global__ void cuda_maxpool2d_kernel(CudaMaxPool2DLayer layer,
         (((batch * input.height + input_row) * input.width + input_col)
          * input.channels) + channel;
 
-    __half max_value = input.device_pointer[first_input_index];
+    float max_value = input.device_pointer[first_input_index];
 
     for (size_t kernel_row = 0;
          kernel_row < layer.kernel_height;
@@ -98,8 +98,8 @@ __global__ void cuda_maxpool2d_kernel(CudaMaxPool2DLayer layer,
                 (((batch * input.height + row) * input.width + col)
                  * input.channels) + channel;
 
-            __half value = input.device_pointer[input_index];
-            if (__hgt(value, max_value)) {
+            float value = input.device_pointer[input_index];
+            if (value > max_value) {
                 max_value = value;
             }
         }

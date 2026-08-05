@@ -1,5 +1,4 @@
 #include "tensor.cuh"
-
 #include <stdint.h>
 
 __host__ bool cuda_tensor_init(CudaTensor *tensor, size_t batch_size , size_t height , size_t width , size_t channels ){
@@ -26,13 +25,13 @@ __host__ bool cuda_tensor_init(CudaTensor *tensor, size_t batch_size , size_t he
     count = count * batch_size;
 
     // check if the amount of mem we want can be presented in size_t 
-    if (count > SIZE_MAX / sizeof(__half) ){
+    if (count > SIZE_MAX / sizeof(float) ){
         return false;
     }
 
-    size_t requested_device_memory = count * sizeof(__half);
+    size_t requested_device_memory = count * sizeof(float);
 
-    __half *device_data = NULL;
+    float *device_data = NULL;
 
 
     cudaError_t error = cudaMalloc((void **) &device_data , requested_device_memory);
@@ -76,14 +75,14 @@ __host__ bool cuda_tensor_destroy(CudaTensor *tensor){
     return true;
 }
 
-__host__ bool cuda_tensor_copy_from_host(const CudaTensor *tensor ,  const __half *host_data){
+__host__ bool cuda_tensor_copy_from_host(const CudaTensor *tensor ,  const float *host_data){
      
     if (tensor == NULL || tensor->device_pointer == NULL || tensor->count == 0  || host_data == NULL){
         return false;
     }
     
 
-    cudaError_t error = cudaMemcpy(tensor->device_pointer, host_data , tensor->count * sizeof(__half) , cudaMemcpyHostToDevice );
+    cudaError_t error = cudaMemcpy(tensor->device_pointer, host_data , tensor->count * sizeof(float) , cudaMemcpyHostToDevice );
     if (error != cudaSuccess){
         return false; 
     }
@@ -93,12 +92,12 @@ __host__ bool cuda_tensor_copy_from_host(const CudaTensor *tensor ,  const __hal
 
 }
 
-__host__ bool cuda_tensor_copy_to_host(const CudaTensor *tensor , __half *host_data){
+__host__ bool cuda_tensor_copy_to_host(const CudaTensor *tensor , float *host_data){
     if (tensor == NULL || host_data == NULL || tensor->count == 0 || tensor->device_pointer == NULL){
         return false;
     }
 
-    cudaError_t error = cudaMemcpy(host_data , tensor->device_pointer , sizeof(__half) * tensor->count , cudaMemcpyDeviceToHost);
+    cudaError_t error = cudaMemcpy(host_data , tensor->device_pointer , sizeof(float) * tensor->count , cudaMemcpyDeviceToHost);
     if (error != cudaSuccess){
         return false;
     }
@@ -118,5 +117,4 @@ __host__ bool cuda_tensor_copy_to_host(const CudaTensor *tensor , __half *host_d
     
 
    
-
 
