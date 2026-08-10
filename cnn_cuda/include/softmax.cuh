@@ -3,6 +3,10 @@
 
 #include "tensor.cuh"
 
+__global__ void cuda_softmax_test_load_shared_kernel(
+    CudaTensor input,
+    CudaTensor output);
+
 /**
  * Applies numerically stable Softmax independently to each tensor batch.
  *
