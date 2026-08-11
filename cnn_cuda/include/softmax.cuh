@@ -3,21 +3,15 @@
 
 #include "tensor.cuh"
 
-__global__ void cuda_softmax_test_load_shared_kernel(
-    CudaTensor input,
-    CudaTensor output);
-
 /**
- * Applies numerically stable Softmax independently to each tensor batch.
+ * Applies numerically stable Softmax to a tensor.
  *
- * All non-batch dimensions are treated as one flat logits vector. Results
- * are written in place using FP32 storage and arithmetic.
+ * The input and output tensors must already be initialized with matching
+ * element counts. All elements are treated as one flat logits vector.
  *
- * @param tensor Initialized NHWC tensor backed by device memory.
- *
- * @return true when the Softmax kernel is launched successfully; false
- *         otherwise.
+ * @param input Initialized tensor containing logits in device memory.
+ * @param output Initialized tensor receiving probabilities in device memory.
  */
-__host__ bool cuda_softmax_forward(CudaTensor *tensor);
+__host__ void cuda_softmax_forward(CudaTensor *input, CudaTensor *output);
 
 #endif
